@@ -86,7 +86,6 @@ namespace vsgImGui
                    vsg::ref_ptr<vsg::RenderPass> renderPass,
                    uint32_t minImageCount, uint32_t imageCount,
                    VkExtent2D imageSize, bool useClearAttachments);
-        void _uploadFonts();
     };
 
     // temporary workaround for Dear ImGui's nonexistent sRGB awareness

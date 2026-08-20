@@ -71,7 +71,6 @@ namespace vsgImGui
 RenderImGui::RenderImGui(const vsg::ref_ptr<vsg::Window>& window, bool useClearAttachments)
 {
     _init(window, useClearAttachments);
-    _uploadFonts();
 }
 
 RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
@@ -80,7 +79,6 @@ RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
                          VkExtent2D imageSize, bool useClearAttachments)
 {
     _init(device, queueFamily, renderPass, minImageCount, imageCount, imageSize, useClearAttachments);
-    _uploadFonts();
 }
 
 RenderImGui::~RenderImGui()
@@ -178,7 +176,7 @@ void RenderImGui::_init(
     init_info.QueueFamily = _queueFamily;
     init_info.Queue = *(_queue); // ImGui doesn't use the queue so we shouldn't need to assign it, but it has an IM_ASSERT requiring it during debug build.
     init_info.PipelineCache = VK_NULL_HANDLE;
-    init_info.MSAASamples = samples;
+    init_info.PipelineInfoMain.MSAASamples = samples;
 
     // Create Descriptor Pool
     vsg::DescriptorPoolSizes pool_sizes = {
@@ -198,7 +196,7 @@ void RenderImGui::_init(
     _descriptorPool = vsg::DescriptorPool::create(_device, maxSets, pool_sizes);
 
     init_info.DescriptorPool = *_descriptorPool;
-    init_info.RenderPass = *renderPass;
+    init_info.PipelineInfoMain.RenderPass = *renderPass;
     init_info.Allocator = nullptr;
     init_info.MinImageCount = std::max(minImageCount, 2u); // ImGui's Vulkan backend has an assert that requires MinImageCount to be 2 or more.
     init_info.ImageCount = imageCount;
@@ -215,11 +213,6 @@ void RenderImGui::_init(
         VkClearRect rect{VkRect2D{VkOffset2D{0, 0}, VkExtent2D{imageSize.width, imageSize.height}}, 0, 1};
         _clearAttachments = vsg::ClearAttachments::create(vsg::ClearAttachments::Attachments{attachment}, vsg::ClearAttachments::Rects{rect});
     }
-}
-
-void RenderImGui::_uploadFonts()
-{
-    ImGui_ImplVulkan_CreateFontsTexture();
 }
 
 void RenderImGui::accept(vsg::RecordTraversal& rt) const
@@ -239,11 +232,13 @@ void RenderImGui::accept(vsg::RecordTraversal& rt) const
 
     // if ImDrawData has been recorded then we need to clear the frame buffer and do the final record to Vulkan command buffer.
     ImDrawData* draw_data = ImGui::GetDrawData();
-    if (draw_data && draw_data->CmdListsCount > 0)
+    if (draw_data && draw_data->CmdLists.size() > 0)
     {
         if (_clearAttachments) _clearAttachments->record(commandBuffer);
 
         if (draw_data)
             ImGui_ImplVulkan_RenderDrawData(draw_data, &(*commandBuffer));
     }
+
+
 }
