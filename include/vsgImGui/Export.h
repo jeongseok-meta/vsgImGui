@@ -35,8 +35,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    define VSGIMGUI_DECLSPEC
 #endif
 
+// Fix in-tree build warning C4005 - macro redefinition
+#if defined(IMGUI_API) || defined(IMPLOT_API)
+#    undef IMGUI_API
+#    undef IMPLOT_API
+#endif
+
 #define IMGUI_API VSGIMGUI_DECLSPEC
 #define IMPLOT_API VSGIMGUI_DECLSPEC
 
 #include <vulkan/vulkan.h>
 #define ImTextureID VkDescriptorSet
+
+#include <vsg/maths/vec2.h>
+#include <vsg/maths/vec4.h>
+
+#define IM_VEC2_CLASS_EXTRA                               \
+    constexpr ImVec2(const vsg::vec2& v) : x(v.x), y(v.y) \
+    {                                                     \
+    }                                                     \
+    operator vsg::vec2() const                            \
+    {                                                     \
+        return vsg::vec2(x, y);                           \
+    }
+
+#define IM_VEC4_CLASS_EXTRA                                               \
+    constexpr ImVec4(const vsg::vec4& v) : x(v.x), y(v.y), z(v.z), w(v.w) \
+    {                                                                     \
+    }                                                                     \
+    operator vsg::vec4() const                                            \
+    {                                                                     \
+        return vsg::vec4(x, y, z, w);                                     \
+    }

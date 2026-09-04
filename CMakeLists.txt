@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.10)
 
 project(vsgImGui
-    VERSION 0.6.0
+    VERSION 0.8.0
     DESCRIPTION "VulkanSceneGraph, ImGui and ImPlot integration library"
     LANGUAGES CXX
 )
@@ -15,9 +15,6 @@ SET(VSGIMGUI_RELEASE_CANDIDATE 0)
 set(VSGIMGUI_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE INTERNAL "Root source directory of vsgImGui")
 set(VSGIMGUI_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE INTERNAL "Root binary directory of vsgImGui")
 
-# set the use of C++17 globally as all examples require it
-set(CMAKE_CXX_STANDARD 17)
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(vsgImGuiMacros)
 
@@ -26,7 +23,7 @@ if (VULKAN_SDK)
     set(ENV{VULKAN_SDK} ${VULKAN_SDK})
 endif()
 
-find_package(vsg 1.0.5)
+find_package(vsg 1.1.13)
 
 vsg_setup_dir_vars()
 vsg_setup_build_vars()
