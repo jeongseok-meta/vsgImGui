@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </editor-fold> */
 
 #include <vsgImGui/SendEventsToImGui.h>
-#include <imgui.h>
+#include <vsgImGui/imgui.h>
 
 #include <vsg/ui/KeyEvent.h>
 #include <vsg/ui/PointerEvent.h>

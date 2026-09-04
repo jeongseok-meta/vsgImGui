@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vsg/vk/DescriptorPool.h>
 
 #include <vsgImGui/Export.h>
-#include <imgui.h>
+#include <vsgImGui/imgui.h>
 
 namespace vsgImGui
 {

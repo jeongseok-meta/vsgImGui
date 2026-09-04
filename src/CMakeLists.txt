@@ -82,14 +82,23 @@ set_property(TARGET vsgImGui PROPERTY CXX_STANDARD 17)
 
 target_compile_definitions(vsgImGui PRIVATE ${EXTRA_DEFINES})
 
+if(VSG_IMGUI_USE_SYSTEM_IMGUI)
+    target_compile_definitions(vsgImGui PUBLIC VSG_IMGUI_USE_SYSTEM_IMGUI)
+endif()
+
+if(VSG_IMGUI_USE_SYSTEM_IMPLOT)
+    target_compile_definitions(vsgImGui PUBLIC VSG_IMGUI_USE_SYSTEM_IMPLOT)
+endif()
+
 target_include_directories(vsgImGui PUBLIC
     $<BUILD_INTERFACE:${VSGIMGUI_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${VSGIMGUI_SOURCE_DIR}/include/vsgImGui>
+    $<BUILD_INTERFACE:${VSGIMGUI_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>
     ${EXTRA_INCLUDES}
 )
 if(NOT VSG_IMGUI_USE_SYSTEM_IMGUI)
     target_include_directories(vsgImGui PRIVATE
+        $<BUILD_INTERFACE:${VSGIMGUI_BINARY_DIR}/include/vsgImGui>
         $<BUILD_INTERFACE:${VSGIMGUI_SOURCE_DIR}/src/imgui/backends>
     )
 endif()
@@ -117,6 +126,7 @@ endif()
 
 
 install(DIRECTORY ${VSGIMGUI_SOURCE_DIR}/include/vsgImGui DESTINATION include)
+install(FILES ${VSGIMGUI_GENERATED_HEADERS} DESTINATION include/vsgImGui)
 
 vsg_add_cmake_support_files(
     CONFIG_TEMPLATE
